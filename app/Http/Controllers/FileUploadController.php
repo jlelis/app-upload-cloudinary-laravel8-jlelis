@@ -17,17 +17,21 @@ class FileUploadController extends Controller
 
     public function storeUploads(Request $request)
     {
+        //get file POST
         $image = $request->file('file');
+
+        //get name original file
         $image_name = $image->getClientOriginalName();
+        //test random create past oncloud
+        $pastas = random_int(1,99);
 
         // $image_url = cloudinary()->upload($image->getRealPath())->getSecurePath();
-        $image_url = $request->file('file')->storeOnCloudinary()->getSecurePath();
-        //save local
-        $image->move(public_path('images'), $image_name);
-        // Store the uploaded file in the "lambogini" directory on Cloudinary with the filename "prosper"
-        // $result = $request->file->storeOnCloudinaryAs('imoveis', $image_name);
-        // dd($image_url);
+        $image_url = $request->file('file')->storeOnCloudinary('deleteme/'.$pastas)->getSecurePath();
 
+        //save local
+        // $image->move(public_path('images'), $image_name);
+       
+        //method to save database
         $image = new Upload();
         $image->image_name = $image_name;
         $image->image_url = $image_url;
